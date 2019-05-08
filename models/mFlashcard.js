@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-const mFlashcard = mongoose.model('Flashcard', mongoose.Schema({
+const mFlashcard = mongoose.model('Flashcard', new mongoose.Schema({
     firstText: {
         type: String,
         required: true,

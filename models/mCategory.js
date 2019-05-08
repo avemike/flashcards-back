@@ -1,7 +1,7 @@
 const Joi = require('joi');
 const mongoose = require('mongoose');
 
-const mCategory = mongoose.model('Category', mongoose.Schema({
+const mCategory = mongoose.model('Category', new mongoose.Schema({
     name: {
         type: String,
         required: true,
