@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
 // return flashcard with given id
 router.get('/:id', async (req, res) => {
     
-    const flashcard = await mFlashcard.findOne({_id: mongoose.Types.ObjectId(req.params.id)}).sort('name');
+    const flashcard = await mFlashcard.findOne({_id: mongoose.Types.ObjectId(req.params.id)}).sort('firstText');
     
     if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
     else res.send(flashcard);
