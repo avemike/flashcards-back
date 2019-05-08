@@ -1,6 +1,5 @@
 const mongoose = require('mongoose');
-const mCategory = require('./models/mCategory');
-const mFlashcard = require('./models/mFlashcard');
+const flashcardsRoutes = require('./routes/flashcardsRoutes');
 const express = require('express');
 const app = express();
 
@@ -10,7 +9,7 @@ mongoose.connect('mongodb://localhost/fiszki')
   .catch(err => console.error('Could not connect to MongoDB...'));
 
 app.use(express.json());
-
+app.use('/api/flashcards', flashcardsRoutes)
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));

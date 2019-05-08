@@ -1,6 +1,5 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const config = require('config');
 const router = express.Router();
 
 const { mFlashcard, validateFlashcard } = require('../models/mFlashcard')
@@ -11,7 +10,7 @@ router.get('/', async (req, res) => {
     
     const flashcards = await mFlashcard.find().sort('firstText');
 
-    if (!flashcard) return res.status(404).send('Flashcards were not found.');    
+    if (!flashcards) return res.status(404).send('Flashcards were not found.');    
     else res.send(flashcards);
     
 });
@@ -19,7 +18,7 @@ router.get('/', async (req, res) => {
 // return flashcard with given id
 router.get('/:id', async (req, res) => {
     
-    const flashcard = await mFlashcard.findOne({_id: mongoose.Types.ObjectId(req.params.id), userId: decoded._id}).sort('name');
+    const flashcard = await mFlashcard.findOne({_id: mongoose.Types.ObjectId(req.params.id)}).sort('name');
     
     if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');
     else res.send(flashcard);
@@ -30,7 +29,7 @@ router.post('/', async (req, res) => {
     const { error } = validateFlashcard(req.body);
     if (error) return res.status(400).send(error.details[0].message);
     
-    const flashcard = new mFlashcard({
+    let flashcard = new mFlashcard({
         firstText: req.body.firstText,
         secondText: req.body.secondText,
     });
