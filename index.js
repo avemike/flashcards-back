@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
-const flashcardsRoutes = require('./routes/flashcardsRoutes');
 const express = require('express');
 const app = express();
+
+const flashcardsRoutes = require('./routes/flashcardsRoutes');
+const categoriesRoutes = require('./routes/categoriesRoutes');
 
 // db name is fiszki
 mongoose.connect('mongodb://localhost/fiszki')
@@ -10,6 +12,8 @@ mongoose.connect('mongodb://localhost/fiszki')
 
 app.use(express.json());
 app.use('/api/flashcards', flashcardsRoutes)
+app.use('/api/categories', categoriesRoutes)
+
 const port = process.env.PORT || 3000;
 
 app.listen(port, () => console.log(`Listening on port ${port}...`));
