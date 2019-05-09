@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 
 const { mCategory, validateCategory } = require('../models/mCategory');
+const { mFlashcardCategory } = require('../models/mFlashcardCategory');
 
 // return all categories
 router.get('/', async (req, res) => {
@@ -73,5 +74,24 @@ router.delete('/:id', async (req, res) => {
     res.send(category);
 });
 
+// 
+// RELATION (flashcard - category) 
+// 
+
+router.get('/:id/flashcards', async (req, res) => {
+    mFlashcardCategory.find(
+        {
+            categoryId: mongoose.Types.ObjectId(req.params.id),
+        }
+    )
+    .populate('flashcardId')
+    .exec()
+    .then( docs => {
+        const flashcards = docs.map(doc => {
+            return doc.flashcardId;
+        })
+        res.send(flashcards);
+    })
+});
 
 module.exports = router;

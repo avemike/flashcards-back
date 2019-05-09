@@ -2,9 +2,9 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 
-const { mFlashcard, validateFlashcard } = require('../models/mFlashcard')
+const { mFlashcard, validateFlashcard } = require('../models/mFlashcard');
 const { mFlashcardCategory, validateFlashcardCategory } = require('../models/mFlashcardCategory');
-
+const { mCategory } = require('../models/mCategory');
 // return all flashcards
 router.get('/', async (req, res) => {
     
@@ -108,16 +108,25 @@ router.delete('/:flashcardId/categories/:categoryId', async (req, res) => {
 });
 
 router.post('/:flashcardId/categories/:categoryId', async (req, res) => {
-    const { error } = validateFlashcardCategory(req.body);
+    const { error } = validateFlashcardCategory({
+        flashcardId: req.params.flashcardId,
+        categoryId: req.params.categoryId
+    });
     if(error) return res.status(400).send(error.details[0].message);
     
+    // checking if relation is already existing
     const isExisting = Boolean(await mFlashcardCategory.findOne({
         flashcardId : mongoose.Types.ObjectId(req.params.flashcardId),
         categoryId : mongoose.Types.ObjectId(req.params.categoryId)
     }));
-    if(isExisting) {
-        return res.status(400).send('This relation is existing');
-    }
+    if(isExisting) return res.status(400).send('This relation is existing');
+
+
+    // checking if given params points to existing flashcard and category
+    const isFlashcardExist = Boolean(await mFlashcard.findById( req.params.flashcardId ));
+    const isCategoryExist = Boolean(await mCategory.findById( req.params.categoryId ));
+    if(!isFlashcardExist || !isCategoryExist) return res.status(400).send("Specific flashcard or category does not exist");
+
     let relation = new mFlashcardCategory({
         flashcardId: mongoose.Types.ObjectId(req.params.flashcardId),
         categoryId: mongoose.Types.ObjectId(req.params.categoryId)
