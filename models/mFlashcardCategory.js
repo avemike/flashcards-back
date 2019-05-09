@@ -17,12 +17,12 @@ const mFlashcardCategory = mongoose.model('Flashcard-category relation', new mon
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
-}, {collection: 'flashcardCategory'}));
+}, {collection: 'flashcardsCategories'}));
 
 function validate(relation) {
     const schema = {
-        flashcardId: Joi.ObjectId(),
-        categoryId: Joi.ObjectId()
+        flashcardId: Joi.objectId(),
+        categoryId: Joi.objectId()
     };
 
     return Joi.validate(relation, schema);
