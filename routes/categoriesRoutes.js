@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 const router = express.Router();
 
 const { mCategory, validateCategory } = require('../models/mCategory');
-const { mFlashcardCategory, validateFlashcardCategory } = require('../models/mFlashcardCategory');
 
 // return all categories
 router.get('/', async (req, res) => {
@@ -64,14 +63,13 @@ router.delete('/:id', async (req, res) => {
         }
     );
     
-    // for the future 
-    // else while(await mCategoryCategory.findOneAndDelete(
-    //     {
-    //         categoryId: mongoose.Types.ObjectId(req.params.id)
-    //     }
-    // ));
-
+    
     if (!category) return res.status(404).send('The category with the given ID was not found.');    
+    else while(await mCategoryCategory.findOneAndDelete(
+        {
+            categoryId: mongoose.Types.ObjectId(req.params.id)
+        }
+    ));
     res.send(category);
 });
 

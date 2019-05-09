@@ -65,17 +65,65 @@ router.delete('/:id', async (req, res) => {
             _id: mongoose.Types.ObjectId(req.params.id)
         }
     );
-    
-    // for the future 
-    // else while(await mFlashcardCategory.findOneAndDelete(
-    //     {
-    //         flashcardId: mongoose.Types.ObjectId(req.params.id)
-    //     }
-    // ));
-
+ 
     if (!flashcard) return res.status(404).send('The flashcard with the given ID was not found.');    
+    else while(await mFlashcardCategory.findOneAndDelete(
+        {
+            flashcardId: mongoose.Types.ObjectId(req.params.id)
+        }
+    ));
+
     res.send(flashcard);
 });
 
+// 
+// RELATION (flashcard - category) 
+// 
 
+router.get('/:id/categories', async (req, res) => {
+    mFlashcardCategory.find(
+        {
+            flashcardId: mongoose.Types.ObjectId(req.params.id),
+        }
+    )
+    .populate('categoryId')
+    .exec()
+    .then( docs => {
+        const categories = docs.map(doc => {
+            return doc.categoryId;
+        })
+        res.send(categories);
+    })
+});
+
+router.delete('/:flashcardId/categories/:categoryId', async (req, res) => {
+    const relation = await mFlashcardCategory.findOneAndDelete(
+        {
+            flashcardId : mongoose.Types.ObjectId(req.params.flashcardId), 
+            categoryId : mongoose.Types.ObjectId(req.params.categoryId)
+        }
+    );
+    if(!relation) return res.status(404).send('Relation between given IDs is not found.')
+    res.send(relation);
+});
+
+router.post('/:flashcardId/categories/:categoryId', async (req, res) => {
+    const { error } = validateFlashcardCategory(req.body);
+    if(error) return res.status(400).send(error.details[0].message);
+    
+    const isExisting = Boolean(await mFlashcardCategory.findOne({
+        flashcardId : mongoose.Types.ObjectId(req.params.flashcardId),
+        categoryId : mongoose.Types.ObjectId(req.params.categoryId)
+    }));
+    if(isExisting) {
+        return res.status(400).send('This relation is existing');
+    }
+    let relation = new mFlashcardCategory({
+        flashcardId: mongoose.Types.ObjectId(req.params.flashcardId),
+        categoryId: mongoose.Types.ObjectId(req.params.categoryId)
+    });
+    relation = await relation.save();
+
+    res.send(relation);
+});
 module.exports = router;
