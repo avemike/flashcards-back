@@ -14,10 +14,6 @@ const mFlashcard = mongoose.model('Flashcard', new mongoose.Schema({
         minlength: 1,
         maxlength: 255
     },
-    category: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Category'
-    },
     userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
