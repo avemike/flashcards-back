@@ -48,7 +48,9 @@ router.put('/:id', async (req, res) => {
             _id: mongoose.Types.ObjectId(req.params.id)
         }, {
             firstText: req.body.firstText,
-            secondText: req.body.secondText
+            secondText: req.body.secondText,
+            correctAnswers: req.body.correctAnswers,
+            badAnswers: req.body.badAnswers,
         }, {
             new: true
         });
