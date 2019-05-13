@@ -25,8 +25,8 @@ app.use(cors());
 app.use(express.json());
 app.use('/api/flashcards', flashcardsRoutes);
 app.use('/api/categories', categoriesRoutes);
-app.use('/api/users', users);
-app.use('/api/auth', auth);
+app.use('/api/register', users);
+app.use('/api/login', auth);
 
 const port = process.env.PORT || 4000;
 app.listen(port, () => console.log(`Listening on port ${port}...`));
